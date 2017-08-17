@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {% spaceless %}
+
+        <!-- Post Content Column -->
+        <div class="col-lg-8">
+
+            <!-- Title -->
+            <h1 class="mt-4"></h1>
+
+            <hr>
+
+            <p>Posted on {{ item.createdAt|date('j F, Y H:i') }}</p>
+
+            <hr>
+
+            <!-- News Content -->
+            <div class="news_content">
+                <p>{{ item.textFull }}</p>
+            </div>
+
+            <hr>
+
+            <!-- Random News Content -->
+            <div class="card my-4">
+                <div class="card-body">
+                    <ul>
+                        {% for val in news %}
+                            <li>
+                                <a href="{{ path('get_news_by_id', {'newsId': val.id}) }}">
+                                    {{ val.textShort|truncate(50, true, '..') }}
+                                </a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    {% endspaceless %}
+{% endblock %}
+

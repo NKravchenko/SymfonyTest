@@ -1,0 +1,6 @@
+Acme\AcmeNewsBundle\Entity\News:
+    news_{1..30}:
+        createdAt: '<dateTimeBetween("-100 days", "now")>'
+        published: '<boolean(75)>'
+        textShort: '<text(70)>'
+        textFull:  '<text(1000)>'

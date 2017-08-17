@@ -1,0 +1,11 @@
+{% autoescape %}
+<?xml version="1.0" encoding="UTF-8"?>
+<list>
+    {% for item in news %}
+        <item id="{{ item.id }}" date="{{ item.createdAt|date('j F, Y H:i') }}">
+            <announce>{{ item.textShort }}</announce>
+            <description>{{ item.textFull }}</description>
+        </item>
+    {% endfor %}
+</list>
+{% endautoescape %}

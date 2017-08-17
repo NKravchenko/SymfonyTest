@@ -1,0 +1,12 @@
+{% macro news(item) %}
+    <div class="card mb-4">
+        <div class="card-body">
+            {#<h2 class="card-title">Title</h2>#}
+            <p class="card-text">{{ item.textFull }}</p>
+            <a href="{{ path('get_news_by_id', {'newsId': item.id}) }}" class="btn btn-primary">Read More &rarr;</a>
+        </div>
+        <div class="card-footer text-muted">
+            Posted on {{ item.createdAt|date('j F, Y H:i') }}
+        </div>
+    </div>
+{% endmacro %}

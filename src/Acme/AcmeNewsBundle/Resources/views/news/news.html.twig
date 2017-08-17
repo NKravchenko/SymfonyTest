@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% import '@AcmeNews/news/macros/item.html.twig' as nn %}
+
+{% block body %}
+    {% spaceless %}
+
+        <!-- Entries Column -->
+        <div class="col-md-8">
+
+            <h1 class="my-4">News list</h1>
+
+            <!-- News list -->
+            {% for item in news %}
+                {{ nn.news(item) }}
+            {% endfor %}
+
+            <!-- Pagination -->
+            <nav aria-label="Page navigation">
+                {{ knp_pagination_render(news) }}
+            </nav>
+
+        </div>
+
+    {% endspaceless %}
+{% endblock %}
+

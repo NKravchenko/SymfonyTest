@@ -1,0 +1,7 @@
+#acme_news_homepage:
+#    path:     /
+#    defaults: { _controller: AcmeNewsBundle:Default:index }
+
+acme_news_homepage:
+    resource: '@AcmeNewsBundle/Controller'
+    type: annotation
