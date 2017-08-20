@@ -1,41 +1,45 @@
 {% extends 'base.html.twig' %}
 
+{% import '@AcmeNews/news/macros/news_list.html.twig' as nl %}
+
 {% block body %}
     {% spaceless %}
+
+
 
         <!-- Post Content Column -->
         <div class="col-lg-8">
 
-            <!-- Title -->
-            <h1 class="mt-4"></h1>
+            {% if item.published == true %}
 
-            <hr>
+                <!-- Title -->
+                <h1 class="mt-4"></h1>
 
-            <p>Posted on {{ item.createdAt|date('j F, Y H:i') }}</p>
+                <hr>
 
-            <hr>
+                <p>Posted on {{ item.createdAt|date('j F, Y H:i') }}</p>
 
-            <!-- News Content -->
-            <div class="news_content">
-                <p>{{ item.textFull }}</p>
-            </div>
+                <hr>
 
-            <hr>
+                <!-- News Content -->
+                <div class="news_content">
+                    <p>{{ item.textFull }}</p>
+                </div>
+
+                <hr>
+
+            {% else %}
+
+                <p> Новость на модерации </p>
+
+            {% endif %}
 
             <!-- Random News Content -->
-            <div class="card my-4">
-                <div class="card-body">
-                    <ul>
-                        {% for val in news %}
-                            <li>
-                                <a href="{{ path('get_news_by_id', {'newsId': val.id}) }}">
-                                    {{ val.textShort|truncate(50, true, '..') }}
-                                </a>
-                            </li>
-                        {% endfor %}
-                    </ul>
-                </div>
-            </div>
+            {% if news is not empty %}
+
+                {{ nl.news_list(news) }}
+
+            {% endif %}
 
         </div>
     {% endspaceless %}

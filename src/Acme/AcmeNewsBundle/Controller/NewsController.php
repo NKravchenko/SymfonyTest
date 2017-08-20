@@ -9,7 +9,6 @@
 namespace Acme\AcmeNewsBundle\Controller;
 
 use Acme\AcmeNewsBundle\Entity\News;
-use Knp\Component\Pager\Pagination\AbstractPagination;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -46,20 +45,10 @@ class NewsController extends Controller
     {
         $page = $request->query->getInt('page', 1);
 
-        $em = $this->getDoctrine()->getManager();
-
-        $news = $em->getRepository(News::class)->getNews();
-
-        $paginator = $this->get('knp_paginator');
-        /** @var AbstractPagination $fromPaginator */
-        $fromPaginator = $paginator->paginate(
-            $news, /* query NOT result */
-            $page,
-            $this::MAXNEWSDEF
-        );
+        $fromPaginator = $this->get('acme_news.service.news')->getNewsByPage($page, $this::MAXNEWSDEF);
 
         if ($_format === 'xml') {
-            $response = $this->render('@AcmeNews/news/news.xml.twig', ['news' => $fromPaginator]);
+            $response = $this->render('@AcmeNews/news/news.xml.twig', ['news' => $fromPaginator->getItems()]);
             $response->headers->set('Content-Type', 'application/xml; charset=utf-8');
 
             return $response;
@@ -70,15 +59,15 @@ class NewsController extends Controller
 
     /**
      * Подробное отображение новости по ее id
-     *
+     * плюс отображение нескольких случайных новостей
      * @Route("/news/{newsId}", name="get_news_by_id")
      * @ParamConverter("newsItem", options={"mapping" :{"newsId" : "id"}})
      */
     public function getNewsByIdAction(News $newsItem)
     {
-        $em      = $this->getDoctrine()->getManager();
         //массив случайных новостей
-        $rndNews = $em->getRepository(News::class)->getRandomNews(5, $newsItem);
+        /** @var News[] $rndNews */
+        $rndNews = $news = $this->get('acme_news.service.news')->getRandomNews(5, $newsItem);
 
         return $this->render(
             '@AcmeNews/news/news_item.html.twig',

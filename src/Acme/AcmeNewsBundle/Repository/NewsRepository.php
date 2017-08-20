@@ -20,7 +20,21 @@ class NewsRepository extends EntityRepository
     public function getNews()
     {
         return $this->createQueryBuilder('n')
-            ->where('n.published = 1');
+            ->where('n.published = 1')
+            ->orderBy('n.createdAt', 'DESC');
+    }
+
+    /**
+     * @return News|null
+     */
+    public function getNewsById($id)
+    {
+        return $this->createQueryBuilder('n')
+            ->where('n.id = :id')
+            ->andWhere('n.published = 1')
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->getOneOrNullResult();
     }
 
     /**

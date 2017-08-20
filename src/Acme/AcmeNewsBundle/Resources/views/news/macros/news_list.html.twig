@@ -1,0 +1,15 @@
+{% macro news_list(news) %}
+    <div class="card my-4">
+        <div class="card-body">
+            <ul>
+                {% for val in news %}
+                    <li>
+                        <a href="{{ path('get_news_by_id', {'newsId': val.id}) }}">
+                            {{ val.textShort|truncate(50, true, '..') }}
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+{% endmacro %}

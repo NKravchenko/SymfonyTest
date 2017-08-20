@@ -1,0 +1,8 @@
+parameters:
+
+services:
+    acme_news.repository.news:
+        class: Acme\AcmeNewsBundle\Repository\NewsRepository
+        factory: ["@doctrine.orm.default_entity_manager", "getRepository"]
+        arguments:
+            - AcmeNewsBundle:News
