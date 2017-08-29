@@ -22,17 +22,17 @@ class NewsService
     }
 
     /**
-     * Получить все новости
+     *  Get all published news
      *
      * @return News[]
      */
     public function getNews()
     {
-        return $this->newsRepository->getNews()->getQuery()->getResult();
+        return $this->newsRepository->getNewsQB()->getQuery()->getResult();
     }
 
     /**
-     * Получить новости в соответствии с номером страницы
+     * Get published news by page
      *
      * @param int|null $page
      * @param int|null $maxresult
@@ -42,11 +42,11 @@ class NewsService
     public function getNewsByPage(int $page = null, int $maxresult = null)
     {
         /** @var \Doctrine\ORM\QueryBuilder $newsQB */
-        $newsQB = $this->newsRepository->getNews();
+        $newsQB = $this->newsRepository->getNewsQB();
 
         /** @var AbstractPagination $fromPaginator */
         $fromPaginator = $this->paginator->paginate(
-            $newsQB, /* query NOT result */
+            $newsQB,
             $page,
             $maxresult
         );
@@ -55,15 +55,66 @@ class NewsService
     }
 
     /**
-     * Массив случайных новостей
+     * Get array of random news
      *
      * @param int|null $maxresult
      *
      * @return News[]
      */
-    public function getRandomNews(int $maxresult = null, News $exeptNews)
+    public function getRandomNews(int $maxresult = 5, News $exceptNews)
     {
-        return $this->newsRepository->getRandomNews($maxresult, $exeptNews);
+        /* Algorithm:
+         * - get the array of id of actual news (like [1, 2, 5])
+         * - shuffle it
+         * - determine a offset
+         * - do a slice by offset
+         * - get News[] by array of random id
+         */
+
+        $newsIds = $this->getIdsOfNews($exceptNews);
+        shuffle($newsIds);
+        $offset     = $this->getRndOffset(count($newsIds), $maxresult);
+        $rndNewsIds = array_slice($newsIds, $offset, $maxresult);
+
+        return $this->newsRepository->getNewsByIds($rndNewsIds);
+    }
+
+    /**
+     * Create array of ids of all published news
+     *
+     * @param News $exceptNews
+     *
+     * @return array
+     */
+    private function getIdsOfNews(News $exceptNews)
+    {
+        $initialNewsIds = $this->newsRepository->getIdsOfNews($exceptNews);
+        $newsIds        = [];
+        foreach ($initialNewsIds as $item) {
+            $newsIds[] = $item['id'];
+        }
+
+        return $newsIds;
+    }
+
+    /**
+     * Generate a random offset value for a next slice function
+     *
+     * @param int $length
+     * @param int $maxresult
+     *
+     * @return int
+     */
+    private function getRndOffset(int $length, int $maxresult)
+    {
+
+        if ($maxresult >= $length) {
+            return 0;
+        }
+
+        $offset = mt_rand(0, ($length - $maxresult));
+
+        return $offset;
     }
 
 }

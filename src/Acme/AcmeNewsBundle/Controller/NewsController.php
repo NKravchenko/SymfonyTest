@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: jimm
- * Date: 16.08.17
- * Time: 14:41
- */
 
 namespace Acme\AcmeNewsBundle\Controller;
 
@@ -24,10 +18,10 @@ use Symfony\Component\HttpFoundation\Response;
 class NewsController extends Controller
 {
 
-    const MAXNEWSDEF = 5; //число отображаемых новостей на странице
+    const MAXNEWSDEF = 5; //  The max count of news on the page
 
     /**
-     * Получить новости в зависимости от страницы и формата
+     * Get news by page number and output file format
      * @Route(
      *     "/news.{_format}",
      *     name="get_news",
@@ -58,14 +52,15 @@ class NewsController extends Controller
     }
 
     /**
-     * Подробное отображение новости по ее id
-     * плюс отображение нескольких случайных новостей
+     * Show detailed news by id.
+     * and show a few random news
+     *
      * @Route("/news/{newsId}", name="get_news_by_id")
      * @ParamConverter("newsItem", options={"mapping" :{"newsId" : "id"}})
      */
     public function getNewsByIdAction(News $newsItem)
     {
-        //массив случайных новостей
+        //array of random news
         /** @var News[] $rndNews */
         $rndNews = $news = $this->get('acme_news.service.news')->getRandomNews(5, $newsItem);
 

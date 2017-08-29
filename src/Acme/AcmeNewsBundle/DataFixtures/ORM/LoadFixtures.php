@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: jimm
- * Date: 16.08.17
- * Time: 19:21
- */
 
 namespace Acme\AcmeNewsBundle\DataFixtures\ORM;
 

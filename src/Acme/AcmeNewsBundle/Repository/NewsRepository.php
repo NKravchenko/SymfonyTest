@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: jimm
- * Date: 16.08.17
- * Time: 18:22
- */
 
 namespace Acme\AcmeNewsBundle\Repository;
 
@@ -17,46 +11,62 @@ class NewsRepository extends EntityRepository
     /**
      * @return \Doctrine\ORM\QueryBuilder
      */
-    public function getNews()
+    public function baseQuery()
     {
         return $this->createQueryBuilder('n')
-            ->where('n.published = 1')
-            ->orderBy('n.createdAt', 'DESC');
+            ->where('n.published = 1');
     }
 
+
     /**
-     * @return News|null
+     * @return \Doctrine\ORM\QueryBuilder
      */
-    public function getNewsById($id)
+    public function getNewsQB()
     {
-        return $this->createQueryBuilder('n')
-            ->where('n.id = :id')
-            ->andWhere('n.published = 1')
-            ->setParameter('id', $id)
-            ->getQuery()
-            ->getOneOrNullResult();
+        return $this->baseQuery()->orderBy('n.createdAt', 'DESC');
     }
 
+
     /**
-     * @param int $maxResult
-     * @param News|null $except
+     * Get array of ids of news
      *
      * @return array
      */
-    public function getRandomNews(int $maxResult = 1, News $except = null)
+    public function getIdsOfNews(News $except = null, $from = null, $to = null)
     {
-        $qb = $this->createQueryBuilder('n')
-            ->addSelect('RAND() as HIDDEN rand')
-            ->where('n.published = 1')
-            ->setMaxResults($maxResult)
-            ->addOrderBy('rand');
+        $qb = $this->baseQuery()
+            ->select('n.id');
 
         if (!empty($except)) {
             $qb->andWhere('n <> :except')
                 ->setParameter('except', $except);
         }
 
-        return $qb->getQuery()->getResult();
+        return $qb->getQuery()->getArrayResult();
     }
 
+
+    /**
+     * @return News|null
+     */
+    public function getNewsById($id)
+    {
+        return $this->baseQuery()
+            ->andWhere('n.id = :id')
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
+    /**
+     * @return array
+     */
+    public function getNewsByIds(array $ids)
+    {
+        return $this->baseQuery()
+            ->andWhere('n.id in (:ids)')
+            ->setParameter('ids', $ids)
+            ->getQuery()
+            ->getResult();
+    }
 }

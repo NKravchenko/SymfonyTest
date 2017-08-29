@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: jimm
- * Date: 16.08.17
- * Time: 18:02
- */
 
 namespace Acme\AcmeNewsBundle\Entity;
 
@@ -19,8 +13,6 @@ class News
 {
 
     /**
-     * Идентификатор новости
-     *
      * @var integer
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
@@ -29,7 +21,7 @@ class News
     private $id;
 
     /**
-     * Дата новости
+     * date of creation
      *
      * @var \DateTime
      * @ORM\Column(name="created_at", type="datetime", nullable=false)
@@ -37,7 +29,7 @@ class News
     private $createdAt;
 
     /**
-     * Опубликовано да/нет
+     * is published
      *
      * @var bool
      * @ORM\Column(name="published", type="boolean", nullable=true)
@@ -45,7 +37,7 @@ class News
     private $published;
 
     /**
-     * Краткий текст новости
+     * short text (preview)
      *
      * @var string
      * @ORM\Column(name="text_short", type="text", nullable=true)
@@ -53,7 +45,7 @@ class News
     private $textShort;
 
     /**
-     * Полный текст новости
+     * full text
      *
      * @var string
      * @ORM\Column(name="text_full", type="text", nullable=true)
